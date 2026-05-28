@@ -103,66 +103,30 @@ function UploadCenter() {
 
       {uploadResult && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-white rounded-full p-2">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-white">Upload Complete</h3>
+          <div className="bg-white rounded-lg shadow-lg max-w-sm w-full p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Upload Complete</h3>
+            
+            <div className="space-y-3 mb-6">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Total rows:</span>
+                <span className="font-medium text-gray-900">{uploadResult.row_count}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Processed:</span>
+                <span className="font-medium text-green-600">{uploadResult.processed_count}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Failed:</span>
+                <span className="font-medium text-red-600">{uploadResult.failed_count}</span>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="px-6 py-6">
-              <div className="space-y-4">
-                {/* Total Rows */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600 font-medium">Total Rows</span>
-                  <span className="text-2xl font-bold text-gray-900">{uploadResult.row_count}</span>
-                </div>
-
-                {/* Processed */}
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 font-medium">Processed</span>
-                  </div>
-                  <span className="text-2xl font-bold text-green-600">{uploadResult.processed_count}</span>
-                </div>
-
-                {/* Failed */}
-                <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span className="text-red-700 font-medium">Failed</span>
-                  </div>
-                  <span className="text-2xl font-bold text-red-600">{uploadResult.failed_count}</span>
-                </div>
-              </div>
-
-              {/* Success Message */}
-              {uploadResult.processed_count > 0 && (
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="text-sm text-blue-700 text-center">
-                    Records are now available in the Review Dashboard
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-6 pb-6">
-              <button
-                onClick={() => setUploadResult(null)}
-                className="w-full px-4 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                Close
-              </button>
-            </div>
+            <button
+              onClick={() => setUploadResult(null)}
+              className="w-full px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}

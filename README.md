@@ -6,7 +6,7 @@ Production-style MVP for ESG data ingestion, normalization, validation, and anal
 
 **Backend**: Django + Django REST Framework + PostgreSQL (NeonDB)  
 **Frontend**: React + Tailwind CSS  
-**Deployment**: Render/Railway ready
+
 
 ## ✨ Features
 
@@ -112,14 +112,7 @@ CORS_ALLOWED_ORIGINS=https://your-frontend.com
 REACT_APP_API_URL=https://your-backend.com/api
 ```
 
-### Deploy to Render/Railway
 
-1. Create PostgreSQL database
-2. Deploy backend (Django)
-3. Deploy frontend (React)
-4. Set environment variables
-5. Run migrations
 
 ## 📝 License
-
-MIT
+Nilesh Kumar

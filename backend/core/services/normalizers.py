@@ -1,6 +1,35 @@
 from datetime import datetime
 from .unit_converter import UnitConverter
 
+
+def parse_date(date_str):
+    """Parse various date formats - shared utility function"""
+    if not date_str:
+        return None
+    
+    date_str = str(date_str).strip()
+    if not date_str:
+        return None
+        
+    # Try multiple date formats
+    formats = [
+        '%Y-%m-%d',      # 2026-05-27
+        '%m/%d/%Y',      # 05/27/2026
+        '%d-%m-%Y',      # 27-05-2026
+        '%d/%m/%Y',      # 27/05/2026
+        '%Y/%m/%d',      # 2026/05/27
+        '%m-%d-%Y',      # 05-27-2026
+    ]
+    
+    for fmt in formats:
+        try:
+            return datetime.strptime(date_str, fmt).date()
+        except:
+            continue
+    
+    return None
+
+
 class SAPNormalizer:
     """Normalize SAP fuel/procurement data"""
     
@@ -23,7 +52,7 @@ class SAPNormalizer:
         normalized_qty, normalized_unit = cls._normalize_unit(quantity, unit, material)
         
         # Parse date
-        period_start = cls._parse_date(row_data.get('posting_date'))
+        period_start = parse_date(row_data.get('posting_date'))
         
         return {
             'activity_type': activity_type,
@@ -62,19 +91,6 @@ class SAPNormalizer:
         
         # Default: return as-is
         return float(quantity), unit
-    
-    @classmethod
-    def _parse_date(cls, date_str):
-        """Parse various date formats"""
-        if not date_str:
-            return None
-        try:
-            return datetime.strptime(str(date_str), '%Y-%m-%d').date()
-        except:
-            try:
-                return datetime.strptime(str(date_str), '%m/%d/%Y').date()
-            except:
-                return None
 
 
 class UtilityNormalizer:
@@ -91,8 +107,8 @@ class UtilityNormalizer:
         normalized_qty, normalized_unit = UnitConverter.normalize_energy(consumption, unit) if consumption else (None, unit)
         
         # Parse billing period
-        period_start = cls._parse_date(row_data.get('billing_start'))
-        period_end = cls._parse_date(row_data.get('billing_end'))
+        period_start = parse_date(row_data.get('billing_start'))
+        period_end = parse_date(row_data.get('billing_end'))
         
         return {
             'activity_type': 'Electricity Consumption',
@@ -104,19 +120,6 @@ class UtilityNormalizer:
             'period_start': period_start,
             'period_end': period_end,
         }
-    
-    @classmethod
-    def _parse_date(cls, date_str):
-        """Parse date string"""
-        if not date_str:
-            return None
-        try:
-            return datetime.strptime(str(date_str), '%Y-%m-%d').date()
-        except:
-            try:
-                return datetime.strptime(str(date_str), '%m/%d/%Y').date()
-            except:
-                return None
 
 
 class TravelNormalizer:
@@ -145,7 +148,7 @@ class TravelNormalizer:
         normalized_qty, normalized_unit = UnitConverter.normalize_distance(distance, 'km') if distance else (None, 'km')
         
         # Parse booking date
-        period_start = cls._parse_date(row_data.get('booking_date'))
+        period_start = parse_date(row_data.get('booking_date'))
         
         return {
             'activity_type': activity_type,
@@ -165,16 +168,3 @@ class TravelNormalizer:
             if key in travel_mode:
                 return activity
         return 'Other Travel'
-    
-    @classmethod
-    def _parse_date(cls, date_str):
-        """Parse date string"""
-        if not date_str:
-            return None
-        try:
-            return datetime.strptime(str(date_str), '%Y-%m-%d').date()
-        except:
-            try:
-                return datetime.strptime(str(date_str), '%m/%d/%Y').date()
-            except:
-                return None

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getRecords, getDashboardSummary } from '../services/api';
 import RecordDetailModal from '../components/RecordDetailModal';
-import DownloadMenu from '../components/Dashboard/DownloadMenu';
 import SummaryCards from '../components/Dashboard/SummaryCards';
 import FilterBar from '../components/Dashboard/FilterBar';
 import RecordsTable from '../components/Dashboard/RecordsTable';
@@ -12,6 +11,7 @@ function ReviewDashboard() {
   const [loading, setLoading] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [filters, setFilters] = useState({
+    company: '',
     status: '',
     source_type: '',
     scope: '',
@@ -46,11 +46,7 @@ function ReviewDashboard() {
   return (
     <div className="px-4 py-6">
       <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-900">Analyst Review Dashboard</h2>
-          <DownloadMenu filters={filters} />
-        </div>
-        
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Analyst Review Dashboard</h2>
         <SummaryCards summary={summary} />
       </div>
 

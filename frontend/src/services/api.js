@@ -25,7 +25,11 @@ export const uploadFile = async (sourceType, file, companyId) => {
 export const getRecords = async (filters = {}) => {
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
-    if (value) params.append(key, value);
+    if (value) {
+      // Map 'company' to 'company_id' for backend
+      const paramKey = key === 'company' ? 'company_id' : key;
+      params.append(paramKey, value);
+    }
   });
   
   const response = await api.get(`/records/?${params.toString()}`);

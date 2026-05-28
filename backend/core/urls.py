@@ -6,10 +6,12 @@ from core.views import (
     TravelUploadView,
     EmissionRecordViewSet,
     DashboardSummaryView,
+    CompanyViewSet,
 )
 
 router = DefaultRouter()
 router.register(r'records', EmissionRecordViewSet, basename='record')
+router.register(r'companies', CompanyViewSet, basename='company')
 
 urlpatterns = [
     path('', include(router.urls)),

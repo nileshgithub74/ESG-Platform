@@ -76,21 +76,4 @@ export const deleteCompany = async (id) => {
   return response.data;
 };
 
-export const downloadRecords = (filters = {}, sourceType = null) => {
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
-  const params = new URLSearchParams();
-  
-  Object.entries(filters).forEach(([key, value]) => {
-    if (value) params.append(key, value);
-  });
-  
-  if (sourceType) {
-    params.append('source_type', sourceType);
-  }
-  
-  params.append('format', 'csv');
-  
-  window.open(`${API_BASE_URL}/records/export/?${params.toString()}`, '_blank');
-};
-
 export default api;

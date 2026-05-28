@@ -11,6 +11,7 @@ function RecordDetailModal({ recordId, onClose, onUpdate }) {
 
   useEffect(() => {
     loadRecord();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recordId]);
 
   const loadRecord = async () => {

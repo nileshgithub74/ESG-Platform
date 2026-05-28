@@ -1,13 +1,49 @@
-import React, { useState } from 'react';
-import { uploadFile } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { uploadFile, getCompanies, createCompany } from '../services/api';
 
 function UploadCenter() {
-  const [companyId, setCompanyId] = useState('1');
+  const [companies, setCompanies] = useState([]);
+  const [companyId, setCompanyId] = useState('');
   const [uploading, setUploading] = useState({});
   const [results, setResults] = useState({});
+  const [showAddCompany, setShowAddCompany] = useState(false);
+  const [newCompany, setNewCompany] = useState({ name: '', code: '' });
+
+  useEffect(() => {
+    loadCompanies();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loadCompanies = async () => {
+    try {
+      const data = await getCompanies();
+      setCompanies(data);
+      if (data.length > 0 && !companyId) {
+        setCompanyId(data[0].id.toString());
+      }
+    } catch (error) {
+      console.error('Failed to load companies:', error);
+    }
+  };
+
+  const handleAddCompany = async (e) => {
+    e.preventDefault();
+    try {
+      const company = await createCompany(newCompany);
+      setCompanies([...companies, company]);
+      setCompanyId(company.id.toString());
+      setNewCompany({ name: '', code: '' });
+      setShowAddCompany(false);
+    } catch (error) {
+      alert('Failed to create company: ' + (error.response?.data?.error || 'Unknown error'));
+    }
+  };
 
   const handleUpload = async (sourceType, file) => {
-    if (!file) return;
+    if (!file || !companyId) {
+      alert('Please select a company first');
+      return;
+    }
 
     setUploading(prev => ({ ...prev, [sourceType]: true }));
     setResults(prev => ({ ...prev, [sourceType]: null }));
@@ -68,19 +104,78 @@ function UploadCenter() {
         <p className="text-gray-600">Upload CSV files from different data sources</p>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 bg-white rounded-lg shadow p-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Company ID
+          Select Company
         </label>
-        <input
-          type="number"
-          value={companyId}
-          onChange={(e) => setCompanyId(e.target.value)}
-          className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        />
-        <p className="mt-1 text-xs text-gray-500">
-          Create companies in Django admin first
-        </p>
+        <div className="flex gap-2">
+          <select
+            value={companyId}
+            onChange={(e) => setCompanyId(e.target.value)}
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select a company...</option>
+            {companies.map(company => (
+              <option key={company.id} value={company.id}>
+                {company.name} ({company.code})
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={() => setShowAddCompany(!showAddCompany)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            + Add Company
+          </button>
+        </div>
+
+        {showAddCompany && (
+          <form onSubmit={handleAddCompany} className="mt-4 p-4 bg-gray-50 rounded">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newCompany.name}
+                  onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="e.g., Acme Corporation"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Code
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newCompany.code}
+                  onChange={(e) => setNewCompany({ ...newCompany, code: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="e.g., ACME"
+                />
+              </div>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Create Company
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddCompany(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -1,7 +1,9 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.http import HttpResponse
 from django.db.models import Q
+import csv
 from core.models import EmissionRecord, ReviewAction
 from core.serializers import EmissionRecordSerializer, EmissionRecordDetailSerializer
 
@@ -46,6 +48,58 @@ class EmissionRecordViewSet(viewsets.ModelViewSet):
             )
         
         return queryset.order_by('-created_at')
+    
+    @action(detail=False, methods=['get'])
+    def export(self, request):
+        """Export records as CSV"""
+        queryset = self.get_queryset()
+        
+        # Create CSV response
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="emission_records.csv"'
+        
+        writer = csv.writer(response)
+        
+        # Write header
+        writer.writerow([
+            'ID',
+            'Company',
+            'Source Type',
+            'Activity Type',
+            'Scope',
+            'Quantity',
+            'Unit',
+            'Normalized Quantity',
+            'Normalized Unit',
+            'Period Start',
+            'Period End',
+            'Status',
+            'Raw Source Data',
+            'Validation Flags',
+            'Created At'
+        ])
+        
+        # Write data
+        for record in queryset:
+            writer.writerow([
+                record.id,
+                record.company.name if record.company else '',
+                record.source_type,
+                record.activity_type,
+                record.scope_category,
+                record.quantity,
+                record.original_unit,
+                record.normalized_quantity,
+                record.normalized_unit,
+                record.period_start,
+                record.period_end,
+                record.status,
+                str(record.raw_payload),
+                str(record.validation_flags),
+                record.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
     
     @action(detail=True, methods=['patch'])
     def approve(self, request, pk=None):

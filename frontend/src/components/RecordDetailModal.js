@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getRecordDetail, approveRecord, rejectRecord, editRecord } from '../services/api';
+import SourceInfoCard from './RecordDetail/SourceInfoCard';
+import StatusCard from './RecordDetail/StatusCard';
+import NormalizedDataCard from './RecordDetail/NormalizedDataCard';
+import ValidationFlags from './RecordDetail/ValidationFlags';
+import AuditTrail from './RecordDetail/AuditTrail';
+import ActionButtons from './RecordDetail/ActionButtons';
 
 function RecordDetailModal({ recordId, onClose, onUpdate }) {
   const [record, setRecord] = useState(null);
@@ -83,203 +89,81 @@ function RecordDetailModal({ recordId, onClose, onUpdate }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-xl font-bold text-gray-900">Record Detail - ID {record.id}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+      <div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white flex justify-between items-center">
+          <div>
+            <h3 className="text-2xl font-bold">Record Detail</h3>
+            <p className="text-blue-100 text-sm">ID: {record.id}</p>
+          </div>
+          <button 
+            onClick={onClose} 
+            className="text-white hover:bg-blue-800 rounded-lg p-2 transition"
+          >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-3">Source Information</h4>
-              <div className="space-y-2 text-sm">
-                <div><span className="text-gray-600">Company:</span> {record.company_name}</div>
-                <div><span className="text-gray-600">Source File:</span> {record.source_filename}</div>
-                <div><span className="text-gray-600">Source Type:</span> {record.source_type}</div>
-                <div><span className="text-gray-600">Row Number:</span> {record.source_row_number}</div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-3">Status</h4>
-              <div className="space-y-2 text-sm">
-                <div><span className="text-gray-600">Status:</span> {record.status}</div>
-                <div><span className="text-gray-600">Locked:</span> {record.is_locked ? 'Yes' : 'No'}</div>
-                <div><span className="text-gray-600">Created:</span> {new Date(record.created_at).toLocaleString()}</div>
-              </div>
-            </div>
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Source & Status Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SourceInfoCard record={record} />
+            <StatusCard record={record} />
           </div>
 
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Normalized Data</h4>
-            {editing ? (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Activity Type</label>
-                  <input
-                    type="text"
-                    value={editData.activity_type}
-                    onChange={(e) => setEditData({ ...editData, activity_type: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-                    <input
-                      type="number"
-                      value={editData.normalized_quantity}
-                      onChange={(e) => setEditData({ ...editData, normalized_quantity: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
-                    <input
-                      type="text"
-                      value={editData.normalized_unit}
-                      onChange={(e) => setEditData({ ...editData, normalized_unit: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
-                  <select
-                    value={editData.scope_category}
-                    onChange={(e) => setEditData({ ...editData, scope_category: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="SCOPE_1">Scope 1</option>
-                    <option value="SCOPE_2">Scope 2</option>
-                    <option value="SCOPE_3">Scope 3</option>
-                  </select>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-2 text-sm">
-                <div><span className="text-gray-600">Activity Type:</span> {record.activity_type}</div>
-                <div><span className="text-gray-600">Scope:</span> {record.scope_category}</div>
-                <div><span className="text-gray-600">Original:</span> {record.quantity} {record.original_unit}</div>
-                <div><span className="text-gray-600">Normalized:</span> {record.normalized_quantity} {record.normalized_unit}</div>
-                <div><span className="text-gray-600">Period:</span> {record.period_start} to {record.period_end}</div>
-              </div>
-            )}
-          </div>
+          {/* Normalized Data */}
+          <NormalizedDataCard 
+            record={record} 
+            editing={editing} 
+            editData={editData} 
+            setEditData={setEditData} 
+          />
 
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Validation Flags</h4>
-            <div className="space-y-2">
-              {record.validation_flags?.map((flag, idx) => (
-                <div key={idx} className={`p-2 rounded text-sm ${
-                  flag.type === 'error' ? 'bg-red-50 text-red-700' :
-                  flag.type === 'warning' ? 'bg-orange-50 text-orange-700' :
-                  'bg-blue-50 text-blue-700'
-                }`}>
-                  {flag.message}
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Validation Flags */}
+          <ValidationFlags flags={record.validation_flags} />
 
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Raw Source Data</h4>
-            <pre className="bg-gray-50 p-3 rounded text-xs overflow-x-auto">
+          {/* Raw Source Data */}
+          <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+            <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <span className="text-gray-600">📄</span>
+              Raw Source Data
+            </h4>
+            <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
               {JSON.stringify(record.raw_payload, null, 2)}
             </pre>
           </div>
 
-          {record.review_actions && record.review_actions.length > 0 && (
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-3">Audit Trail</h4>
-              <div className="space-y-2">
-                {record.review_actions.map((action) => (
-                  <div key={action.id} className="border-l-4 border-blue-500 pl-3 py-2 text-sm">
-                    <div className="font-medium">{action.action_type} by {action.created_by}</div>
-                    <div className="text-gray-600 text-xs">{new Date(action.created_at).toLocaleString()}</div>
-                    {action.comment && <div className="text-gray-700 mt-1">{action.comment}</div>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Audit Trail */}
+          <AuditTrail actions={record.review_actions} />
 
+          {/* Comment Section */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Comment</label>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Add Comment</label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              placeholder="Add a comment..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Add a comment about this record..."
             />
           </div>
         </div>
 
-        <div className="p-6 border-t border-gray-200 flex justify-between">
-          <div className="flex gap-2">
-            {!record.is_locked && (
-              <>
-                {editing ? (
-                  <>
-                    <button
-                      onClick={handleEdit}
-                      disabled={actionLoading}
-                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-                    >
-                      Save Changes
-                    </button>
-                    <button
-                      onClick={() => setEditing(false)}
-                      disabled={actionLoading}
-                      className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setEditing(true)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-                  >
-                    Edit
-                  </button>
-                )}
-              </>
-            )}
-          </div>
-          <div className="flex gap-2">
-            {!record.is_locked && record.status !== 'APPROVED' && (
-              <button
-                onClick={handleApprove}
-                disabled={actionLoading}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-              >
-                Approve & Lock
-              </button>
-            )}
-            {!record.is_locked && record.status !== 'REJECTED' && (
-              <button
-                onClick={handleReject}
-                disabled={actionLoading}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
-              >
-                Reject
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        {/* Footer Actions */}
+        <ActionButtons
+          record={record}
+          editing={editing}
+          actionLoading={actionLoading}
+          onEdit={() => setEditing(true)}
+          onSave={handleEdit}
+          onCancel={() => setEditing(false)}
+          onApprove={handleApprove}
+          onReject={handleReject}
+          onClose={onClose}
+        />
       </div>
     </div>
   );

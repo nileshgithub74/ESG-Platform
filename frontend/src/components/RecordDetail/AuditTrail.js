@@ -16,8 +16,7 @@ function AuditTrail({ actions }) {
 
   return (
     <div className="bg-purple-50 rounded-lg p-5 border border-purple-200">
-      <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <span className="text-purple-600">📋</span>
+      <h4 className="font-bold text-gray-900 mb-4">
         Audit Trail
       </h4>
       <div className="space-y-3">

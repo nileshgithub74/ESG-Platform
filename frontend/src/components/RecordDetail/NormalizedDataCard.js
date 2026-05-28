@@ -4,8 +4,7 @@ function NormalizedDataCard({ record, editing, editData, setEditData }) {
   if (editing) {
     return (
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-5 border border-blue-200">
-        <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <span className="text-indigo-600">📊</span>
+        <h4 className="font-bold text-gray-900 mb-4">
           Normalized Data (Editing)
         </h4>
         <div className="space-y-4 bg-white p-4 rounded-lg">
@@ -58,8 +57,7 @@ function NormalizedDataCard({ record, editing, editData, setEditData }) {
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-5 border border-blue-200">
-      <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <span className="text-indigo-600">📊</span>
+      <h4 className="font-bold text-gray-900 mb-4">
         Normalized Data
       </h4>
       <div className="grid grid-cols-2 gap-4">

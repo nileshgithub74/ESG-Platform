@@ -15,7 +15,7 @@ function DownloadMenu({ filters }) {
         onClick={() => setShowMenu(!showMenu)}
         className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 flex items-center gap-2"
       >
-        📥 Download Records
+        Download Records
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
@@ -26,25 +26,25 @@ function DownloadMenu({ filters }) {
             onClick={() => handleDownload()}
             className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 rounded-t-lg"
           >
-            📊 All Records
+            All Records
           </button>
           <button
             onClick={() => handleDownload('sap')}
             className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 border-t"
           >
-            🏭 SAP Data
+            SAP Data
           </button>
           <button
             onClick={() => handleDownload('utility')}
             className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 border-t"
           >
-            ⚡ Utility Data
+            Utility Data
           </button>
           <button
             onClick={() => handleDownload('travel')}
             className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 border-t rounded-b-lg"
           >
-            ✈️ Travel Data
+            Travel Data
           </button>
         </div>
       )}

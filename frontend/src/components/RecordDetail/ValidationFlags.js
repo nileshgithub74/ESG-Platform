@@ -16,8 +16,7 @@ function ValidationFlags({ flags }) {
 
   return (
     <div className="bg-orange-50 rounded-lg p-5 border border-orange-200">
-      <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <span className="text-orange-600">⚠️</span>
+      <h4 className="font-bold text-gray-900 mb-4">
         Validation Flags
       </h4>
       <div className="space-y-2">

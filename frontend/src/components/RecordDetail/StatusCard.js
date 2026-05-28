@@ -12,8 +12,7 @@ function StatusCard({ record }) {
 
   return (
     <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-      <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <span className="text-green-600">✓</span>
+      <h4 className="font-bold text-gray-900 mb-4">
         Status
       </h4>
       <div className="space-y-3">
@@ -28,7 +27,7 @@ function StatusCard({ record }) {
           <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
             record.is_locked ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
           }`}>
-            {record.is_locked ? '🔒 Yes' : '🔓 No'}
+            {record.is_locked ? 'Yes' : 'No'}
           </span>
         </div>
         <div className="flex justify-between">

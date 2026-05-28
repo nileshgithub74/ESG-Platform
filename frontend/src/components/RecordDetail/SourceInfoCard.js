@@ -3,8 +3,7 @@ import React from 'react';
 function SourceInfoCard({ record }) {
   return (
     <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-      <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <span className="text-blue-600">📁</span>
+      <h4 className="font-bold text-gray-900 mb-4">
         Source Information
       </h4>
       <div className="space-y-3">

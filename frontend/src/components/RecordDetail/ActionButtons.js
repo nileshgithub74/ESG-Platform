@@ -38,7 +38,7 @@ function ActionButtons({
                 onClick={onEdit}
                 className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition"
               >
-                ✏️ Edit
+                Edit
               </button>
             )}
           </>
@@ -51,7 +51,7 @@ function ActionButtons({
             disabled={actionLoading}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold transition"
           >
-            ✓ Approve & Lock
+            Approve & Lock
           </button>
         )}
         {!record.is_locked && record.status !== 'REJECTED' && (
@@ -60,7 +60,7 @@ function ActionButtons({
             disabled={actionLoading}
             className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-semibold transition"
           >
-            ✗ Reject
+            Reject
           </button>
         )}
         <button

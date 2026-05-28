@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getRecords, getDashboardSummary } from '../services/api';
+import { getRecords, getDashboardSummary, downloadRecords } from '../services/api';
 import RecordDetailModal from '../components/RecordDetailModal';
 
 function ReviewDashboard() {
@@ -58,7 +58,35 @@ function ReviewDashboard() {
   return (
     <div className="px-4 py-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Analyst Review Dashboard</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-900">Analyst Review Dashboard</h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => downloadRecords(filters)}
+              className="px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+            >
+              📥 Download All
+            </button>
+            <button
+              onClick={() => downloadRecords(filters, 'sap')}
+              className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+            >
+              SAP
+            </button>
+            <button
+              onClick={() => downloadRecords(filters, 'utility')}
+              className="px-4 py-2 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
+            >
+              Utility
+            </button>
+            <button
+              onClick={() => downloadRecords(filters, 'travel')}
+              className="px-4 py-2 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
+            >
+              Travel
+            </button>
+          </div>
+        </div>
         
         {summary && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
